@@ -4,7 +4,7 @@ let webpack = require('webpack');
 module.exports = {
     mode: 'development',
     entry: {
-        // test: './src/test.js',
+        // test: './src/a.js',
         react: ['react', 'react-dom']
     },
     output: {

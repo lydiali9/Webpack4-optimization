@@ -6,9 +6,30 @@ let webpack = require('webpack');
 
 module.exports = {
     mode: 'production',
-    entry: './src/index.js',
+    optimization: { // 实现了第三方和公共代码的抽离 commonChunkPlugins
+      splitChunks: { // 分割代码块
+          cacheGroups: { // 缓存组
+            common: { // 公共模块
+                chunks: "initial",
+                minSize: 0,
+                minChunks: 2
+            },
+            vendor: { // 把你抽离出来
+                priority: 1,
+                test: /node_modules/,
+                chunks: "initial",
+                minSize: 0,
+                minChunks: 2
+            }
+          }
+      }
+    },
+    entry: {
+        index: './src/index.js',
+        other: './src/other.js'
+    },
     output: {
-        filename: "bundle.js",
+        filename: "[name].js",
         path: path.resolve(__dirname, 'dist')
     },
     devServer: {
@@ -60,9 +81,9 @@ module.exports = {
         //     id: 'css',
         //     use: ['style-loader', 'css-loader']
         // }),
-        new webpack.DllReferencePlugin({
-            manifest: path.resolve(__dirname, 'dist', 'mainfest.json')
-        }),
+        // new webpack.DllReferencePlugin({ // 动态引用链接库
+        //     manifest: path.resolve(__dirname, 'dist', 'mainfest.json')
+        // }),
         new webpack.IgnorePlugin(/\.\/local/, /moment/), // 从moment库中忽略.local文件
         new HtmlWebpackPlugin({
             template: "./public/index.html"
