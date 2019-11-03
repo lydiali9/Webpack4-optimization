@@ -9,6 +9,11 @@ module.exports = {
         filename: "bundle.js",
         path: path.resolve(__dirname, 'dist')
     },
+    devServer: {
+        port: 3000,
+        open: true,
+        contentBase: './dist'
+    },
     module: {
         noParse: /jquery/, // 不去解析jquery中的依赖库
         rules: [
@@ -29,10 +34,12 @@ module.exports = {
         ]
     },
     plugins: [
+        new webpack.DllReferencePlugin({
+            manifest: path.resolve(__dirname, 'dist', 'mainfest.json')
+        }),
         new webpack.IgnorePlugin(/\.\/local/, /moment/), // 从moment库中忽略.local文件
         new HtmlWebpackPlugin({
-            template: "./public/index.html",
-
+            template: "./public/index.html"
         })
     ]
 }
