@@ -6,33 +6,15 @@ let webpack = require('webpack');
 
 module.exports = {
     mode: 'production',
-    optimization: { // 实现了第三方和公共代码的抽离 commonChunkPlugins
-      splitChunks: { // 分割代码块
-          cacheGroups: { // 缓存组
-            common: { // 公共模块
-                chunks: "initial",
-                minSize: 0,
-                minChunks: 2
-            },
-            vendor: { // 把你抽离出来
-                priority: 1,
-                test: /node_modules/,
-                chunks: "initial",
-                minSize: 0,
-                minChunks: 2
-            }
-          }
-      }
-    },
     entry: {
-        index: './src/index.js',
-        other: './src/other.js'
+        index: './src/index.js'
     },
     output: {
         filename: "[name].js",
         path: path.resolve(__dirname, 'dist')
     },
     devServer: {
+        hot: true, // 启用热更新
         port: 3000,
         open: true,
         contentBase: './dist'
@@ -87,6 +69,8 @@ module.exports = {
         new webpack.IgnorePlugin(/\.\/local/, /moment/), // 从moment库中忽略.local文件
         new HtmlWebpackPlugin({
             template: "./public/index.html"
-        })
+        }),
+        new webpack.NamedModulesPlugin(), // 打印更新的模块路径
+        new webpack.HotModuleReplacementPlugin() // 热更新插件
     ]
 }
