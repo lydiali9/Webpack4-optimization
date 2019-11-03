@@ -1,5 +1,6 @@
 let path = require('path');
 let HtmlWebpackPlugin = require('html-webpack-plugin');
+let webpack = require('webpack');
 
 module.exports = {
     mode: 'development',
@@ -13,6 +14,8 @@ module.exports = {
         rules: [
             {
                 test: /\.js$/,
+                exclude: /node_modules/,
+                include: path.resolve('src'),
                 use: {
                     loader: "babel-loader",
                     options: {
@@ -26,6 +29,7 @@ module.exports = {
         ]
     },
     plugins: [
+        new webpack.IgnorePlugin(/\.\/local/, /moment/), // 从moment库中忽略.local文件
         new HtmlWebpackPlugin({
             template: "./public/index.html",
 
