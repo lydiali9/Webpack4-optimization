@@ -2,10 +2,10 @@ let path = require('path');
 let HtmlWebpackPlugin = require('html-webpack-plugin');
 let webpack = require('webpack');
 // 模块 happywebpack 可以实现多线程来打包 进程
-let Happypack = require('happypack');
+// let Happypack = require('happypack');
 
 module.exports = {
-    mode: 'development',
+    mode: 'production',
     entry: './src/index.js',
     output: {
         filename: "bundle.js",
@@ -23,29 +23,7 @@ module.exports = {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 include: path.resolve('src'),
-                // use: {
-                //     loader: "babel-loader",
-                //     options: {
-                //         presets: [
-                //             '@babel/preset-env',
-                //             '@babel/preset-react'
-                //         ]
-                //     }
-                // },
-                use: 'Happypack/loader?id=js'
-            },
-            {
-                test: /\.css$/,
-                // use: ['style-loader', 'css-loader']
-                use: "Happypack/loader?id=css"
-            }
-        ]
-    },
-    plugins: [
-        new Happypack({
-            id: 'js',
-            use: [
-                {
+                use: {
                     loader: "babel-loader",
                     options: {
                         presets: [
@@ -54,12 +32,34 @@ module.exports = {
                         ]
                     }
                 }
-            ]
-        }),
-        new Happypack({
-            id: 'css',
-            use: ['style-loader', 'css-loader']
-        }),
+                // use: 'Happypack/loader?id=js'
+            },
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader']
+                // use: "Happypack/loader?id=css"
+            }
+        ]
+    },
+    plugins: [
+        // new Happypack({
+        //     id: 'js',
+        //     use: [
+        //         {
+        //             loader: "babel-loader",
+        //             options: {
+        //                 presets: [
+        //                     '@babel/preset-env',
+        //                     '@babel/preset-react'
+        //                 ]
+        //             }
+        //         }
+        //     ]
+        // }),
+        // new Happypack({
+        //     id: 'css',
+        //     use: ['style-loader', 'css-loader']
+        // }),
         new webpack.DllReferencePlugin({
             manifest: path.resolve(__dirname, 'dist', 'mainfest.json')
         }),
